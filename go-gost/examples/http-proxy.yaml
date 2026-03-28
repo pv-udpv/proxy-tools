@@ -1,0 +1,37 @@
+log:
+  level: info
+
+# HTTP proxy server (supports HTTP CONNECT for HTTPS tunneling)
+services:
+  - name: http-proxy
+    addr: ":8080"
+    handler:
+      type: http
+    listener:
+      type: tcp
+
+---
+# HTTP proxy with basic authentication
+services:
+  - name: http-proxy-auth
+    addr: ":8080"
+    handler:
+      type: http
+      auth:
+        username: proxyuser
+        password: proxypass
+    listener:
+      type: tcp
+
+---
+# HTTP + SOCKS5 on the same port (auto-detect)
+services:
+  - name: mixed-proxy
+    addr: ":8080"
+    handler:
+      type: http+socks5
+      auth:
+        username: proxyuser
+        password: proxypass
+    listener:
+      type: tcp
