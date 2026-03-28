@@ -1,0 +1,36 @@
+log:
+  level: info
+
+# Route traffic through two sequential proxies:
+#   client -> gost(:8080) -> proxy1(socks5) -> proxy2(http) -> destination
+
+services:
+  - name: entry-service
+    addr: ":8080"
+    handler:
+      type: http+socks5
+    listener:
+      type: tcp
+    chain: double-hop
+
+chains:
+  - name: double-hop
+    hops:
+      - name: hop1
+        nodes:
+          - name: proxy1
+            addr: proxy1.example.com:1080
+            connector:
+              type: socks5
+              auth:
+                username: user1
+                password: pass1
+      - name: hop2
+        nodes:
+          - name: proxy2
+            addr: proxy2.example.com:8080
+            connector:
+              type: http
+              auth:
+                username: user2
+                password: pass2

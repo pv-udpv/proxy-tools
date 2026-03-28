@@ -1,0 +1,38 @@
+static_resources:
+  listeners:
+    - name: tcp_listener
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 9000
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.tcp_proxy
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
+                stat_prefix: tcp_proxy
+                cluster: tcp_backend
+                access_log:
+                  - name: envoy.access_loggers.stdout
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+
+  clusters:
+    - name: tcp_backend
+      connect_timeout: 5s
+      type: STRICT_DNS
+      load_assignment:
+        cluster_name: tcp_backend
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: backend.example.com
+                      port_value: 3306
+
+admin:
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 9901

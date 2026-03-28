@@ -1,0 +1,42 @@
+log:
+  level: info
+
+# SSH remote port forward: expose local service through SSH server
+services:
+  - name: ssh-remote-forward
+    addr: ":2222"
+    handler:
+      type: sshd
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target
+          addr: 127.0.0.1:8080
+
+---
+# Connect through SSH proxy to reach a remote service
+services:
+  - name: ssh-tunnel-out
+    addr: ":8080"
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: remote-service
+          addr: remote-host:80
+
+chains:
+  - name: ssh-chain
+    hops:
+      - name: ssh-hop
+        nodes:
+          - name: ssh-node
+            addr: ssh-server:22
+            connector:
+              type: ssh
+              auth:
+                username: user
+                password: password
