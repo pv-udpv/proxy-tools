@@ -1,0 +1,21 @@
+{
+  "log": { "loglevel": "info" },
+  "inbounds": [
+    {
+      "port": 8388,
+      "protocol": "shadowsocks",
+      "settings": {
+        "method": "chacha20-ietf-poly1305",
+        "password": "change-this-password",
+        "network": "tcp,udp"
+      },
+      "tag": "ss-in"
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "direct"
+    }
+  ]
+}

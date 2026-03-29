@@ -1,0 +1,50 @@
+{
+  "log": { "loglevel": "info" },
+  "inbounds": [
+    {
+      "port": 1080,
+      "protocol": "socks",
+      "settings": { "auth": "noauth", "udp": true }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "vmess",
+      "settings": {
+        "vnext": [
+          {
+            "address": "your-server.example.com",
+            "port": 10086,
+            "users": [
+              {
+                "id": "00000000-0000-0000-0000-000000000000",
+                "alterId": 0,
+                "security": "auto"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/vmess"
+        }
+      },
+      "tag": "vmess-out"
+    },
+    {
+      "protocol": "freedom",
+      "tag": "direct"
+    }
+  ],
+  "routing": {
+    "rules": [
+      {
+        "type": "field",
+        "ip": ["geoip:private", "geoip:cn"],
+        "outboundTag": "direct"
+      }
+    ]
+  }
+}

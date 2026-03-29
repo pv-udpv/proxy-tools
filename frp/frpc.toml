@@ -1,0 +1,30 @@
+# frp client configuration
+serverAddr = "your-frps-server.example.com"
+serverPort = 7000
+
+# Authentication — must match frps
+auth.method = "token"
+auth.token = "change-this-secret-token"
+
+# TLS (recommended for production)
+# transport.tls.enable = true
+
+# Logging
+log.to = "console"
+log.level = "info"
+
+# Expose a local web service via HTTP virtual host
+[[proxies]]
+name = "web"
+type = "http"
+localIP = "127.0.0.1"
+localPort = 3000
+customDomains = ["app.example.com"]
+
+# Expose a local TCP service (e.g., database)
+[[proxies]]
+name = "database"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 5432
+remotePort = 25432

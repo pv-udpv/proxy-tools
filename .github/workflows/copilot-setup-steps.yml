@@ -1,0 +1,88 @@
+name: "Copilot Setup Steps"
+
+# Preconfigures the GitHub Copilot coding agent environment for proxy-tools.
+# Based on the awesome-copilot collection pattern:
+# https://github.com/github/awesome-copilot
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  # The job MUST be called 'copilot-setup-steps' to be recognized by GitHub Copilot Agent
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      # ── Go (go-gost, frp, chisel, ligolo-ng) ────────────────────────────────
+      - name: Set up Go
+        uses: actions/setup-go@d60b41a563a30eb0b7a2b5ec694394ca0ef91716 # v5.5.0
+        with:
+          go-version: "1.22"
+          cache: false
+
+      # ── Python + Jupyter (cookbook notebooks) ───────────────────────────────
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          pip install --quiet \
+            jupyter \
+            nbformat \
+            requests \
+            pyyaml \
+            python-dotenv
+
+      # ── YAML / config validation tools ──────────────────────────────────────
+      - name: Install yamllint
+        run: pip install --quiet yamllint
+
+      # ── Install gh-aw MCP server extension (awesome-copilot base) ───────────
+      - name: Install gh-aw extension
+        uses: github/gh-aw/actions/setup-cli@32b3a711a9ee97d38e3989c90af0385aff0066a7 # v0.57.2
+        with:
+          version: v0.57.2
+
+      # ── Proxy tool binaries ─────────────────────────────────────────────────
+      - name: Install go-gost
+        run: |
+          GOST_VERSION="3.0.0-rc10"
+          curl -fsSL \
+            "https://github.com/go-gost/gost/releases/download/v${GOST_VERSION}/gost_${GOST_VERSION}_linux_amd64.tar.gz" \
+            | tar -xz -C /usr/local/bin gost
+          gost --version
+
+      - name: Install frp
+        run: |
+          FRP_VERSION="0.61.1"
+          curl -fsSL \
+            "https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/frp_${FRP_VERSION}_linux_amd64.tar.gz" \
+            | tar -xz --strip-components=1 -C /usr/local/bin \
+              "frp_${FRP_VERSION}_linux_amd64/frps" \
+              "frp_${FRP_VERSION}_linux_amd64/frpc"
+          frps --version
+
+      - name: Install chisel
+        run: |
+          CHISEL_VERSION="1.10.0"
+          curl -fsSL \
+            "https://github.com/jpillora/chisel/releases/download/v${CHISEL_VERSION}/chisel_${CHISEL_VERSION}_linux_amd64.gz" \
+            | gunzip > /usr/local/bin/chisel
+          chmod +x /usr/local/bin/chisel
+          chisel --version
+
+      # ── Docker Compose (available on ubuntu-latest; verify) ─────────────────
+      - name: Verify Docker and Compose
+        run: |
+          docker version
+          docker compose version

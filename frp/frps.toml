@@ -1,0 +1,23 @@
+# frp server configuration
+bindPort = 7000
+
+# Dashboard
+webServer.addr = "0.0.0.0"
+webServer.port = 7500
+webServer.user = "admin"
+webServer.password = "changeme"
+
+# Authentication — must match frpc
+auth.method = "token"
+auth.token = "change-this-secret-token"
+
+# HTTP virtual host port
+vhostHTTPPort = 8080
+vhostHTTPSPort = 8443
+
+# TLS (recommended for production)
+# transport.tls.enable = true
+
+# Logging
+log.to = "console"
+log.level = "info"

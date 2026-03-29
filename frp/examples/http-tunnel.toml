@@ -1,0 +1,18 @@
+# Expose a local HTTP service via frp HTTP virtual host
+# frps must have vhostHTTPPort configured (e.g., 8080)
+
+serverAddr = "frps.example.com"
+serverPort = 7000
+auth.method = "token"
+auth.token = "change-this-secret-token"
+
+[[proxies]]
+name = "local-web"
+type = "http"
+localIP = "127.0.0.1"
+localPort = 8080
+customDomains = ["app.example.com"]
+
+# Optional: strip path prefix
+# locations = ["/api"]
+# hostHeaderRewrite = "backend.internal"

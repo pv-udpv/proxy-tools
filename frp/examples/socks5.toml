@@ -1,0 +1,14 @@
+# SOCKS5 proxy via frp
+# Combine frp + gost/dante on the agent side to provide SOCKS5 egress
+serverAddr = "frps.example.com"
+serverPort = 7000
+auth.method = "token"
+auth.token = "change-this-secret-token"
+
+# frpc runs gost SOCKS5 locally on port 1080, then exposes it via TCP
+[[proxies]]
+name = "socks5-proxy"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 1080
+remotePort = 11080
