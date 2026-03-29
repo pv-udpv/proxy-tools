@@ -1,0 +1,37 @@
+log:
+  level: info
+
+# DNS-over-TLS resolver: forward local DNS queries over TLS to Cloudflare
+services:
+  - name: dns-over-tls
+    addr: ":53"
+    handler:
+      type: dns
+    listener:
+      type: udp
+    forwarder:
+      nodes:
+        - name: cloudflare-dot
+          addr: 1.1.1.1:853
+          connector:
+            type: direct
+          dialer:
+            type: tls
+
+---
+# DNS-over-HTTPS resolver
+services:
+  - name: dns-over-https
+    addr: ":5300"
+    handler:
+      type: dns
+    listener:
+      type: udp
+    forwarder:
+      nodes:
+        - name: google-doh
+          addr: dns.google:443
+          connector:
+            type: direct
+          dialer:
+            type: https

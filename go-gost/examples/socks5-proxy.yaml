@@ -1,0 +1,37 @@
+log:
+  level: info
+
+# SOCKS5 proxy server (unauthenticated)
+services:
+  - name: socks5-open
+    addr: ":1080"
+    handler:
+      type: socks5
+    listener:
+      type: tcp
+
+---
+# SOCKS5 proxy server (with authentication)
+services:
+  - name: socks5-auth
+    addr: ":1080"
+    handler:
+      type: socks5
+      auth:
+        username: proxyuser
+        password: proxypass
+    listener:
+      type: tcp
+
+---
+# SOCKS4/SOCKS5 combined
+services:
+  - name: socks-combined
+    addr: ":1080"
+    handler:
+      type: socks
+      auth:
+        username: proxyuser
+        password: proxypass
+    listener:
+      type: tcp

@@ -1,0 +1,25 @@
+http:
+  routers:
+    secure-app:
+      rule: "Host(`app.example.com`)"
+      entryPoints:
+        - websecure
+      service: app-service
+      tls:
+        certResolver: letsencrypt   # Automatic cert from Let's Encrypt
+      middlewares:
+        - redirect-to-https
+
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+  services:
+    app-service:
+      loadBalancer:
+        servers:
+          - url: "http://app.internal:3000"
+
+# Let's Encrypt is configured in traefik.yml under certificatesResolvers

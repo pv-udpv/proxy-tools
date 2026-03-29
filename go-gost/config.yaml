@@ -1,0 +1,21 @@
+log:
+  level: info
+  format: json
+
+services:
+  - name: socks5-service
+    addr: ":1080"
+    handler:
+      type: socks5
+      auth:
+        username: ""
+        password: ""
+    listener:
+      type: tcp
+
+  - name: http-proxy-service
+    addr: ":8080"
+    handler:
+      type: http
+    listener:
+      type: tcp

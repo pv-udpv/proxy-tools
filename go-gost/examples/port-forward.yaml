@@ -1,0 +1,54 @@
+log:
+  level: info
+
+# TCP port forward: :9000 -> target-host:3306 (e.g. expose a remote MySQL)
+services:
+  - name: tcp-forward
+    addr: ":9000"
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: mysql
+          addr: target-host:3306
+
+---
+# UDP port forward: :5353 -> 8.8.8.8:53 (DNS via UDP)
+services:
+  - name: udp-forward
+    addr: ":5353"
+    handler:
+      type: udp
+    listener:
+      type: udp
+    forwarder:
+      nodes:
+        - name: dns
+          addr: 8.8.8.8:53
+
+---
+# TCP forward through a SOCKS5 chain
+services:
+  - name: tcp-via-socks5
+    addr: ":9001"
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: internal-service
+          addr: 192.168.1.100:8080
+    chain: socks5-chain
+
+chains:
+  - name: socks5-chain
+    hops:
+      - name: hop
+        nodes:
+          - name: socks5-proxy
+            addr: proxy.example.com:1080
+            connector:
+              type: socks5

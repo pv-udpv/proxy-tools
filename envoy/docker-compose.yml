@@ -1,0 +1,11 @@
+services:
+  envoy:
+    image: envoyproxy/envoy:v1.29-latest
+    container_name: envoy
+    restart: unless-stopped
+    ports:
+      - "10000:10000"   # Proxy listener
+      - "9901:9901"     # Admin interface
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
+    command: ["-c", "/etc/envoy/envoy.yaml", "--log-level", "info"]

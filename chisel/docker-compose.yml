@@ -1,0 +1,12 @@
+services:
+  chisel-server:
+    image: jpillora/chisel:latest
+    container_name: chisel-server
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    command:
+      - server
+      - "--port=8080"
+      - "--auth=user:changeme"
+      - "--reverse"

@@ -1,0 +1,12 @@
+services:
+  ligolo-proxy:
+    image: ghcr.io/nicocha30/ligolo-ng:latest
+    container_name: ligolo-proxy
+    restart: unless-stopped
+    ports:
+      - "11601:11601"   # Agent connection port
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    command: ["proxy", "-selfcert", "-laddr", "0.0.0.0:11601"]

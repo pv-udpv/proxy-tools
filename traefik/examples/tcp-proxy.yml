@@ -1,0 +1,34 @@
+tcp:
+  routers:
+    # TCP router for MySQL: forward port 3306
+    mysql-router:
+      entryPoints:
+        - mysql
+      rule: "HostSNI(`*`)"
+      service: mysql-service
+
+    # TCP router for PostgreSQL
+    pg-router:
+      entryPoints:
+        - postgres
+      rule: "HostSNI(`*`)"
+      service: pg-service
+
+  services:
+    mysql-service:
+      loadBalancer:
+        servers:
+          - address: "db1.internal:3306"
+          - address: "db2.internal:3306"
+
+    pg-service:
+      loadBalancer:
+        servers:
+          - address: "pg.internal:5432"
+
+# Add the corresponding entryPoints to traefik.yml:
+# entryPoints:
+#   mysql:
+#     address: ":3306"
+#   postgres:
+#     address: ":5432"

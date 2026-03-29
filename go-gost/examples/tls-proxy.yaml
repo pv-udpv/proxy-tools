@@ -1,0 +1,42 @@
+log:
+  level: info
+
+# TLS-encrypted SOCKS5 proxy
+services:
+  - name: tls-socks5
+    addr: ":1443"
+    handler:
+      type: socks5
+      auth:
+        username: proxyuser
+        password: proxypass
+    listener:
+      type: tls
+      tls:
+        certFile: /etc/gost/certs/server.crt
+        keyFile: /etc/gost/certs/server.key
+
+---
+# Client connecting to TLS proxy
+services:
+  - name: local-entry
+    addr: ":1080"
+    handler:
+      type: socks5
+    listener:
+      type: tcp
+    chain: tls-chain
+
+chains:
+  - name: tls-chain
+    hops:
+      - name: tls-hop
+        nodes:
+          - name: tls-proxy
+            addr: proxy.example.com:1443
+            connector:
+              type: socks5
+            dialer:
+              type: tls
+              tls:
+                caFile: /etc/gost/certs/ca.crt

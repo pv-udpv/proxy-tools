@@ -1,0 +1,119 @@
+# Proxy Tools Cookbook Manifest
+# Follows the awesome-copilot cookbook.yml structure
+
+cookbooks:
+  - id: proxy-tools
+    name: Proxy Tools
+    description: Notebooks and recipes for configuring and operating popular proxy tools
+    path: cookbook
+    featured: true
+    languages:
+      - id: python
+        name: Python
+        icon: "\uE73C"
+        extension: .py
+      - id: notebook
+        name: Jupyter Notebook
+        icon: "\uE6B8"
+        extension: .ipynb
+    recipes:
+      - id: getting-started
+        name: Getting Started
+        description: Overview of all proxy tools in this repo and how to choose the right one for your use case
+        notebook: notebooks/01-getting-started.ipynb
+        tags:
+          - orientation
+          - basics
+
+      - id: go-gost
+        name: go-gost Proxy Setup
+        description: Configure SOCKS5/HTTP proxies, port forwarding, and proxy chains with go-gost v3
+        notebook: notebooks/02-go-gost.ipynb
+        tags:
+          - go-gost
+          - socks5
+          - http-proxy
+          - port-forward
+
+      - id: nginx-proxy
+        name: nginx as Reverse Proxy
+        description: Set up nginx as a reverse proxy, load balancer, or TCP stream proxy
+        notebook: notebooks/03-nginx-proxy.ipynb
+        tags:
+          - nginx
+          - reverse-proxy
+          - load-balancer
+
+      - id: envoy-proxy
+        name: Envoy Proxy
+        description: Configure Envoy for HTTP routing, TCP proxying, and TLS termination
+        notebook: notebooks/04-envoy-proxy.ipynb
+        tags:
+          - envoy
+          - http-proxy
+          - tls
+
+      - id: ligolo-ng-pivoting
+        name: Network Pivoting with ligolo-ng
+        description: Establish TUN-based tunnels through pivot hosts to reach internal networks
+        notebook: notebooks/05-ligolo-ng-pivoting.ipynb
+        tags:
+          - ligolo-ng
+          - pivoting
+          - red-team
+
+      - id: frp-tunnel
+        name: Fast Reverse Proxy (frp)
+        description: Expose services behind NAT using frp server/client setup
+        notebook: notebooks/06-frp-tunnel.ipynb
+        tags:
+          - frp
+          - nat-traversal
+          - reverse-proxy
+
+      - id: chisel-tunnel
+        name: chisel HTTP Tunnel
+        description: Create TCP tunnels over HTTP with chisel, including reverse SOCKS5
+        notebook: notebooks/07-chisel-tunnel.ipynb
+        tags:
+          - chisel
+          - http-tunnel
+          - socks5
+
+      - id: v2ray-xray
+        name: v2ray / Xray Protocols
+        description: Configure VMess, VLESS, Shadowsocks, and SOCKS5 with v2ray/Xray-core
+        notebook: notebooks/08-v2ray-xray.ipynb
+        tags:
+          - v2ray
+          - xray
+          - vmess
+          - vless
+
+      - id: haproxy
+        name: HAProxy Load Balancing
+        description: Set up HAProxy for TCP/HTTP load balancing, SSL termination, and ACL routing
+        notebook: notebooks/09-haproxy.ipynb
+        tags:
+          - haproxy
+          - load-balancer
+          - ssl
+
+      - id: traefik
+        name: Traefik with Docker
+        description: Configure Traefik reverse proxy with Docker provider and automatic Let's Encrypt TLS
+        notebook: notebooks/10-traefik.ipynb
+        tags:
+          - traefik
+          - docker
+          - letsencrypt
+
+      - id: proxy-chaining
+        name: Multi-hop Proxy Chaining
+        description: Route traffic through multiple sequential proxy hops using go-gost chains or proxychains
+        notebook: notebooks/11-proxy-chaining.ipynb
+        tags:
+          - proxy-chain
+          - go-gost
+          - proxychains
+          - multi-hop

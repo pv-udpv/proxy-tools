@@ -1,0 +1,63 @@
+http:
+  middlewares:
+    # Basic auth (generate password: echo $(htpasswd -nb user password))
+    basic-auth:
+      basicAuth:
+        users:
+          - "admin:$apr1$xyz...$hashedpassword"
+
+    # Rate limiting: 100 req/s, burst 50
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+
+    # Strip path prefix before forwarding
+    strip-prefix-api:
+      stripPrefix:
+        prefixes:
+          - "/api"
+
+    # Add security headers
+    security-headers:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+        accessControlMaxAge: 100
+        addVaryHeader: true
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        contentTypeNosniff: true
+
+    # Compress responses
+    compress:
+      compress: {}
+
+    # IP whitelist — allow only internal ranges
+    ip-allowlist:
+      ipAllowList:
+        sourceRange:
+          - "10.0.0.0/8"
+          - "192.168.0.0/16"
+
+  routers:
+    protected-api:
+      rule: "Host(`api.example.com`)"
+      entryPoints:
+        - websecure
+      service: api-service
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - basic-auth
+        - rate-limit
+        - security-headers
+
+  services:
+    api-service:
+      loadBalancer:
+        servers:
+          - url: "http://api.internal:8080"

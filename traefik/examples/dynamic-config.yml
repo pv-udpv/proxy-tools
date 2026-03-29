@@ -1,0 +1,45 @@
+http:
+  routers:
+    # Route app.example.com → app-service
+    app-router:
+      rule: "Host(`app.example.com`)"
+      entryPoints:
+        - websecure
+      service: app-service
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - secure-headers
+
+    # Route api.example.com/v1/* → api-service
+    api-router:
+      rule: "Host(`api.example.com`) && PathPrefix(`/v1`)"
+      entryPoints:
+        - websecure
+      service: api-service
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    app-service:
+      loadBalancer:
+        servers:
+          - url: "http://app.internal:3000"
+          - url: "http://app2.internal:3000"
+        healthCheck:
+          path: /healthz
+          interval: "10s"
+          timeout: "3s"
+
+    api-service:
+      loadBalancer:
+        servers:
+          - url: "http://api.internal:8080"
+
+  middlewares:
+    secure-headers:
+      headers:
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        contentTypeNosniff: true
+        browserXssFilter: true

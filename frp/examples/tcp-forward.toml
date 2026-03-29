@@ -1,0 +1,12 @@
+# Forward a raw TCP port through frp
+serverAddr = "frps.example.com"
+serverPort = 7000
+auth.method = "token"
+auth.token = "change-this-secret-token"
+
+[[proxies]]
+name = "tcp-service"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 3306      # local MySQL
+remotePort = 13306    # exposed on frps public IP:13306

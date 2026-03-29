@@ -1,0 +1,11 @@
+services:
+  gost:
+    image: gogost/gost:latest
+    container_name: gost
+    restart: unless-stopped
+    ports:
+      - "1080:1080"   # SOCKS5
+      - "8080:8080"   # HTTP proxy
+    volumes:
+      - ./config.yaml:/etc/gost/config.yaml:ro
+    command: ["-C", "/etc/gost/config.yaml"]
