@@ -49,7 +49,7 @@ jobs:
 
       # ── Install gh-aw MCP server extension (awesome-copilot base) ───────────
       - name: Install gh-aw extension
-        uses: github/gh-aw/actions/setup-cli@32b3a711a9ee97d38e3989c90af0385aff0066a7 # v0.57.2
+        uses: github/gh-aw/actions/setup-cli@ce1794953e0ec42adc41b6fca05e02ab49ee21c3 # v0.68.3
         with:
           version: v0.57.2
 
